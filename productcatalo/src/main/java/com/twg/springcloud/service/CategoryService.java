@@ -2,8 +2,9 @@ package com.twg.springcloud.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.twg.springcloud.model.Category;
 import com.twg.springcloud.repository.CategoryRepository;
@@ -11,25 +12,18 @@ import com.twg.springcloud.repository.CategoryRepository;
 @Service
 public class CategoryService {
 
-	@Autowired
-	private CategoryRepository categoryRepository;
-	
-	
+    private final CategoryRepository categoryRepository;
 
-	public CategoryService(CategoryRepository categoryRepository) {
-		super();
-		this.categoryRepository = categoryRepository;
-	}
+    public CategoryService(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
 
+    public List<Category> findAllCategories() {
+        return categoryRepository.findAll();
+    }
 
-
-	public List<Category> findAllCategories() {
-		return categoryRepository.findAll();
-	}
-
-
-	public Category getCategoryById(long id) {
-		return categoryRepository.findById(id).get();
-	}
-	
+    public Category getCategoryById(long id) {
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found with id: " + id));
+    }
 }
