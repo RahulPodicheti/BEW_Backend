@@ -1,15 +1,14 @@
-# Use official lightweight Java 21 JDK base image
+# Use lightweight Java 21 image
 FROM eclipse-temurin:21-jdk-alpine
 
-# Set the working directory in the container
+# Set working directory
 WORKDIR /app
 
-# Copy the Spring Boot JAR file into the container
-COPY target/productcatalo-0.0.1-SNAPSHOT.jar app.jar
+# Copy the built Spring Boot JAR (using wildcard for flexibility)
+COPY target/*.jar app.jar
 
-# Expose the port your app runs on
+# Expose port (same as Spring Boot default)
 EXPOSE 8080
 
-# Use environment variables from host at runtime via `--env-file`
-# Start the application
+# Run the app
 ENTRYPOINT ["java", "-jar", "app.jar"]
